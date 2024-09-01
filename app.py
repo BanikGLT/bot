@@ -46,4 +46,4 @@ if __name__ == "__main__":
     application = create_app(token)
     application.bot.set_webhook(f"{url}/{token}")
 
-    app.run(host="0.0.0.0", port=8000)
+    app.run(host="0.0.0.0", port=8080)
