@@ -5,6 +5,10 @@ import os
 
 app = Flask(__name__)
 
+# Укажите здесь токен вашего Telegram-бота и URL вашего сайта
+TOKEN = "7480718425:AAElZRWRvkRAxSh9ScyK30FNa-IMFGAOmaE"  # Замените на ваш токен
+WEBHOOK_URL = "https://banikglt-bot-8d0d.twc1.net"  # Замените на ваш URL
+
 # Функция для инициализации бота
 def create_app(token):
     application = Application.builder().token(token).build()
@@ -32,18 +36,15 @@ def create_app(token):
     return application
 
 # Основная функция приложения
-@app.route(f"/<token>", methods=["POST"])
-def webhook(token):
-    application = create_app(token)
+@app.route(f"/{TOKEN}", methods=["POST"])
+def webhook():
+    application = create_app(TOKEN)
     update = Update.de_json(request.get_json(), application.bot)
     application.update_queue.put(update)
     return "ok"
 
 if __name__ == "__main__":
-    token = input("Введите токен вашего Telegram-бота: ")
-    url = input("Введите URL вашего сайта (например, https://your_domain.com): ")
-
-    application = create_app(token)
-    application.bot.set_webhook(f"{url}/{token}")
+    application = create_app(TOKEN)
+    application.bot.set_webhook(f"{WEBHOOK_URL}/{TOKEN}")
 
     app.run(host="0.0.0.0", port=8080)
