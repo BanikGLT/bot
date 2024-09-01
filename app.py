@@ -1,7 +1,7 @@
 from flask import Flask, request
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler
-import os
+import asyncio
 
 app = Flask(__name__)
 
@@ -37,10 +37,10 @@ def create_app(token):
 
 # Основная функция приложения
 @app.route(f"/{TOKEN}", methods=["POST"])
-def webhook():
+async def webhook():
     application = create_app(TOKEN)
     update = Update.de_json(request.get_json(), application.bot)
-    application.update_queue.put(update)
+    await application.update_queue.put(update)
     return "ok"
 
 if __name__ == "__main__":
