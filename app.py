@@ -37,10 +37,15 @@ def create_app(token):
 
 # Основная функция приложения
 @app.route(f"/{TOKEN}", methods=["POST"])
-async def webhook():
+def webhook():
     application = create_app(TOKEN)
     update = Update.de_json(request.get_json(), application.bot)
-    await application.update_queue.put(update)
+    
+    # Асинхронный вызов функции в синхронном контексте
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(application.update_queue.put(update))
+    
     return "ok"
 
 if __name__ == "__main__":
